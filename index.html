@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <title>Farm World 3D</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <div id="hud">
+    <div><b>Farm World</b> <span id="status">Tap an object to interact</span></div>
+    <div class="stats"><span>Coins: <b id="coins">0</b></span><span>Hunger: <b id="hunger">100</b></span><span>Items: <b id="itemCount">0</b></span></div>
+    <div class="toolbar">
+      <button id="inventoryBtn">Inventory</button><button id="marketBtn">Market</button><button id="settingsBtn">Settings</button>
+    </div>
+  </div>
+
+  <div id="panels">
+    <section id="inventoryPanel" class="panel hidden"><button class="close">×</button><h2>Inventory</h2><ul id="inventoryList"></ul></section>
+    <section id="marketPanel" class="panel hidden"><button class="close">×</button><h2>Market</h2><div id="marketTabs"></div><div id="marketList"></div></section>
+    <section id="settingsPanel" class="panel hidden"><button class="close">×</button><h2>Settings</h2><label>Camera <select id="cameraSelect"><option value="follow">Follow</option><option value="topdown">Top down</option><option value="cinematic">Cinematic</option></select></label><label>Sound <input id="soundToggle" type="checkbox" checked /></label></section>
+  </div>
+
+  <div id="interactPrompt" class="hidden"><span id="promptText">Interact</span><button id="interactBtn">Interact</button></div>
+  <div id="touchControls"><button id="up">▲</button><div><button id="left">◀</button><button id="down">▼</button><button id="right">▶</button></div></div>
+  <div id="actionControls"><button id="actionBtn">Interact</button><button id="useBtn">Use item</button></div>
+
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+  <script src="config.js"></script><script src="game.js"></script><script src="main.js"></script>
+</body>
+</html>
