@@ -1,44 +1,41 @@
 import { createEconomySystem, bindMarketUi, createNearMarketPrompt, registerMarketStyles } from './marketplace.js';
+import { bindVirtualJoystick } from './controls.js';
 
 registerMarketStyles();
+bindVirtualJoystick(document);
 
 const economy = createEconomySystem({
-  coins: 150,
-  bag: { stick: 2, stone: 1, rope: 0, meat: 0, ammo: 0, medkit: 0 },
+  coins: Number(localStorage.getItem('polyIslandCoins') || 150),
   marketPosition: { x: 220, z: 170 }
 });
 
-const marketRoot = document.body;
 const marketPrompt = createNearMarketPrompt();
-marketRoot.appendChild(marketPrompt);
+document.body.appendChild(marketPrompt);
+const ui = bindMarketUi({ economy, root: document.body });
 
-const ui = bindMarketUi({
-  economy,
-  onPurchase: (item, qty) => economy.buyItem(item, qty),
-  onSell: (item, qty) => economy.sellItem(item, qty),
-  root: marketRoot
-});
+function saveEconomy() {
+  localStorage.setItem('polyIslandCoins', String(economy.state.coins));
+  localStorage.setItem('polyIslandBag', JSON.stringify(economy.state.bag));
+}
 
+window.addEventListener('beforeunload', saveEconomy);
 window.PolyIslandMarket = {
   economy,
   ui,
   prompt: marketPrompt,
   updateNearby: (playerX, playerZ) => {
     const near = economy.updateProximity(playerX, playerZ);
-    marketPrompt.classList.toggle('hidden', !near);
-    if (near && !economy.state.shopOpen) {
-      marketPrompt.textContent = 'E Open Marketplace';
-    }
+    marketPrompt.classList.toggle('hidden', !near || economy.state.shopOpen);
     return near;
   },
-  openShop: () => {
-    economy.toggleShop(true);
-    ui.render();
-  },
-  closeShop: () => {
-    economy.toggleShop(false);
-    ui.render();
-  }
+  openShop: () => { economy.toggleShop(true); ui.render(); },
+  closeShop: () => { economy.toggleShop(false); ui.render(); },
+  save: saveEconomy
 };
 
-console.log('Marketplace economy ready.');
+window.addEventListener('keydown', (event) => {
+  if (event.code === 'KeyE' && economy.state.nearby) {
+    economy.toggleShop();
+    ui.render();
+  }
+});
